@@ -1,3 +1,5 @@
+hdfs dfs -chmod 664 /apps/hive/warehouse/tahoe_production.db/
+
 'hdfs://PeopleFindersCluster9099/apps/hive/warehouse/tahoe_production.db/stagedeltas/.hive-staging_hive_2016-01-21_23-23-30_112_7324396989319427273-1': Permission denied: user=hive, access=WRITE, inode="/apps/hive/warehouse/tahoe_production.db/stagedeltas/.hive-staging_hive_2016-01-21_23-23-30_112_7324396989319427273-1":hdfs:hdfs:drwxr-xr-x
 
 
