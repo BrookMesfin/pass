@@ -10,26 +10,37 @@ public class Compression {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+			Text text = new Text("blahbfadfgsdhgfshgdhlahblah");
+			Compression c = new Compression();
+			
+			System.out.println(c.compress(text));
+			
 	}
 
 	public IntWritable compress(Text field) {
+		
+		Deflater df = new Deflater();
+		df = stageCompress(field); //stage field to be compressed
+		
+		IntWritable compressed = new IntWritable(flattenFile(df));   // compress data
+		df.end();   //end compression process
+		
+		return compressed;	
+	}
+	
+	public Deflater stageCompress(Text field) {
 		
 		Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION);
 		byte[] input = field.getBytes();
 		
 		compressor.setInput(input); //input data to be compressed
 		compressor.finish(); // done reading in data
-		
-		IntWritable compressed = new IntWritable(read(compressor));   // compress data
-		compressor.end();   //compression process is over
-		
-		return compressed;
-			
+
+		return compressor;
 	}
 	
-	public int read(Deflater fileToCompress) {
+	
+	public int flattenFile(Deflater fileToCompress) {
 		
 		byte[] readbuffer = new byte[1024];
 		int readCount = 0;
