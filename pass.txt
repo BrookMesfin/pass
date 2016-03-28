@@ -1,3 +1,102 @@
+public static final InvalidSsn INSTANCE = new InvalidSsn();
+	
+	private static char VERIFIED     = 'V'; //no issues found with ssn
+	private static char TOOLONG      = 'L'; //ssn was greater than 9 digits
+	private static char TOOSHORT     = 'S'; //ssn was less than 9 digits
+	private static char FORMATBAD    = 'F'; //formatting issues with ssn. ie. whitespace or dashes
+	private static char BADDATA      = 'B'; //alpha characters
+	private static char KNOWNBADSSN  = 'K'; //on the known invalid ssn list, starts with 9 or 666
+	
+	/**
+	 * 		Social Security Number Guidelines
+	 * 
+	 * 		Social Security Administration rules
+	 * 		1. 9 digits long
+	 * 		2. first 3 digits 000 or 666 
+	 * 		3. Starts with 9
+	 * 		4. ssn that is 98765432* meaning any number 0-9 for last digit
+	 * 		 		
+	 * 		Peoplefinders rules
+	 * 		5. no dashes no whitespace
+	 *  	6. no alpha characters
+	 *  
+	 * "^(.*[a-zA-Z].*{9})|(000|666)[0-9]{6}|[0-9]{5}[0]{4}|9.*{9}|[0-9]{3}[0]{2}[0-9]{4}$";
+	 */
+	private static String regex ="^(?!000|666)(?:[0-6][0-9]{2}|7(?:[0-6][0-9]|7[0-2]))-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
+	private static String SSARULESREGEX ="^(000|666)[0-9]{6}|[0-9]{5}[0]{4}|9.*{9}|[0-9]{3}[0]{2}[0-9]{4}$";
+	private static String HASALPHACHAR = ".*[a-zA-Z].*";
+	private static String IS9DIGITSLONG = "\\d{9}";
+	private static String HASWHITESPACEORHYPHEN = ".*[- | \\s].*";
+	
+	private static Map<Character, String> ssnCheck = new HashMap<Character, String>();
+	
+	private static ArrayList<String> knownInvalidssnList = new ArrayList<String>(buildinvalidssnlist());
+		
+	private InvalidSsn() {
+		
+	}
+	
+	public static InvalidSsn getIstance() {
+		
+		return INSTANCE;
+	}
+	
+	
+	public char invalidssnCheck(String ssn) {
+		
+		for(String badssn : knownInvalidssnList)
+				if(ssn.equals(badssn))
+					return KNOWNBADSSN;
+		
+		if (ssn.charAt(0) == '9')
+			return KNOWNBADSSN;
+		
+		
+		return VERIFIED;
+		
+	}
+	
+	private static ArrayList<String> buildinvalidssnlist(){
+		ArrayList<String> invalidssnList = new ArrayList<>();
+		invalidssnList.add("002281852");
+		invalidssnList.add("042103580");
+		invalidssnList.add("062360749");
+		invalidssnList.add("078051120");
+		invalidssnList.add("095073645");
+		invalidssnList.add("078051120");
+		invalidssnList.add("128036045");
+		invalidssnList.add("135016629");
+		invalidssnList.add("141186941");
+		invalidssnList.add("165167999");
+		invalidssnList.add("165187999");
+		invalidssnList.add("165207999");
+		invalidssnList.add("165227999");
+		invalidssnList.add("165247999");
+		invalidssnList.add("189092294");
+		invalidssnList.add("212097694");
+		invalidssnList.add("212099999");
+		invalidssnList.add("306302348");
+		invalidssnList.add("308125070");
+		invalidssnList.add("468288779");
+		invalidssnList.add("549241889");
+		invalidssnList.add("219099999");
+		invalidssnList.add("123456789");
+		invalidssnList.add("111111111");
+		invalidssnList.add("222222222");
+		invalidssnList.add("333333333");
+		invalidssnList.add("444444444");
+		invalidssnList.add("555555555");
+		invalidssnList.add("777777777");
+		invalidssnList.add("888888888");
+		
+		return invalidssnList;
+	}
+
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
 hdfs dfs -chmod -R 664 /apps/hive/warehouse/tahoe_production.db/
 hdfs dfs -chown -R hive /apps/hive/warehouse/tahoe_production.db/
 
